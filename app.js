@@ -32,8 +32,19 @@ const connection = eval(require('./lib/connection'));
           break;
           case "Add Role":
             console.clear();
+            // This is the inquirer function
+            d.getAllDept( data => {
+              r.inqRole( data, roleName => {
+                //This is the add department with sql
+                r.addRole(roleName, (res) => {
+                 //console.log(res);
+                });
+              mainMenu();
+             })
+           })
           break; 
           case "Add Employee":
+            console.clear();
           break;
           case "View Departments":
           console.clear();
@@ -44,13 +55,13 @@ const connection = eval(require('./lib/connection'));
           break;
           case "View Roles":
             console.clear();
-            d.getAllRoles( data => {
+            r.getAllRoles( data => {
               console.table(data);
               mainMenu();
             });
           break;
           case "View Employees by Manager":
-            
+            console.clear();
           break;
           case "Update Employee Roles":
           break;
@@ -70,6 +81,16 @@ const connection = eval(require('./lib/connection'));
               //mainMenu();
           break;
           case "Delete Role":
+            console.clear();
+            d.getAllRole( data => {
+               //console.log(data);
+               d.selRole(data, res => {
+                  d.delRole(res, (delD) => {
+                    console.log(delD);
+                    mainMenu();
+                  })
+                }) 
+              });
           break;
           case "Delete Employee":
           break;
