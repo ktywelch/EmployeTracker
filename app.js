@@ -1,4 +1,4 @@
-const cTable = require('console.table');
+//const cTable = require('console.table');
 const inquirer = require('inquirer')
 const actions = require("./lib/actions");
 const mysql = require("mysql");
@@ -29,7 +29,7 @@ const connection = eval(require('./lib/connection'));
               });
               mainMenu();
             })
-          
+            break;
           case "Add Role":
             console.clear();
             // This is the inquirer function
@@ -42,7 +42,7 @@ const connection = eval(require('./lib/connection'));
               mainMenu();
              })
            })
-           
+           break;
           case "Add Employee":
             console.clear();
           break;
@@ -69,9 +69,13 @@ const connection = eval(require('./lib/connection'));
           break;
           case "Delete Department":
             console.clear();
+            let currDepts=[];
             d.getAllDept( data => {
+              data.forEach(e => {
+                currDepts.push({'name': e.name,'value': e.id})
+              });
                //console.log(data);
-               d.selDept(data, res => {
+               d.selDept(currDepts, res => {
                   d.delDept(res, (delD) => {
                     console.log(delD);
                     mainMenu();
@@ -86,7 +90,7 @@ const connection = eval(require('./lib/connection'));
             r.getAllRoles(data => {
                console.log(data);
                 data.forEach(e => {
-                  currRoles.push({'id': e.id,'title': e.title})
+                  currRoles.push({'name': e.title + " Department: " + e.department,'value': e.id})
                 });
                 console.log(currRoles);
                r.selRole(currRoles, res => {
