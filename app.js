@@ -69,6 +69,10 @@ const connection = eval(require('./lib/connection'));
           break;
           case "View Employees by Manager":
             console.clear();
+            e.getAllEmployees( data => {
+              console.table(data);
+              mainMenu();
+            });
           break;
           case "Update Employee Roles":
           break;
