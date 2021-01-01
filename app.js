@@ -29,7 +29,7 @@ const connection = eval(require('./lib/connection'));
               });
               mainMenu();
             })
-          break;
+          
           case "Add Role":
             console.clear();
             // This is the inquirer function
@@ -42,7 +42,7 @@ const connection = eval(require('./lib/connection'));
               mainMenu();
              })
            })
-          break; 
+           
           case "Add Employee":
             console.clear();
           break;
@@ -81,11 +81,16 @@ const connection = eval(require('./lib/connection'));
               //mainMenu();
           break;
           case "Delete Role":
+            let currRoles = [];
             console.clear();
-            d.getAllRole( data => {
-               //console.log(data);
-               d.selRole(data, res => {
-                  d.delRole(res, (delD) => {
+            r.getAllRoles(data => {
+               console.log(data);
+                data.forEach(e => {
+                  currRoles.push({'id': e.id,'title': e.title})
+                });
+                console.log(currRoles);
+               r.selRole(currRoles, res => {
+                  r.delRole(res, (delD) => {
                     console.log(delD);
                     mainMenu();
                   })
