@@ -13,6 +13,7 @@ const connection = eval(require('./lib/connection'));
     let currDepts = [];
     let currRoles = [];
     let currMgrs = [];
+    let currEmps = [];
     inquirer
       .prompt({
         name: "action",
@@ -118,7 +119,7 @@ const connection = eval(require('./lib/connection'));
                 data.forEach(e => {
                   currRoles.push({'name': e.title + " Department: " + e.department,'value': e.id})
                 });
-                console.log(currRoles);
+                //console.log(currRoles);
                r.selRole(currRoles, res => {
                   r.delRole(res, (delD) => {
                     console.log(delD);
@@ -128,6 +129,17 @@ const connection = eval(require('./lib/connection'));
               });
           break;
           case "Delete Employee":
+            e.getAllEmployees( data => {
+              data.forEach(e => {
+                currEmps.push({'name': `${e.Employee}  - ${e.Role} in ${e.Department}` , 'value': e.id})
+              });
+              e.selEmployee(currEmps, res => {
+                e.delEmployee(res, (delD) => {
+                  console.log(delD);
+                  mainMenu();
+                })
+              })
+            })            
           break;
           case "View Department Budget":
           break;
