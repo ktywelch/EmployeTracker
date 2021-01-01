@@ -12,6 +12,7 @@ const connection = eval(require('./lib/connection'));
  const mainMenu = () => {
     let currDepts = [];
     let currRoles = [];
+    let currMgrs = [];
     inquirer
       .prompt({
         name: "action",
@@ -41,9 +42,8 @@ const connection = eval(require('./lib/connection'));
               });
               r.inqAddRole( currDepts, roleName => {
                 //This is the add department with sql
-                  console.log(roleName);
+                 // console.log(roleName);
                 r.addRole(roleName, (res) => {
-
                  console.log(res);
                 });
               mainMenu();
@@ -51,7 +51,24 @@ const connection = eval(require('./lib/connection'));
            })
            break;
           case "Add Employee":
-            console.clear();
+          console.clear();
+            e.getManagers( data1 => {
+              data1.forEach(el => {
+                currMgrs.push({'name': el.manager + " ' " + e.title,'value': el.id})
+              });
+             r.getAllRoles( data => {
+               data.forEach(e => {
+               currRoles.push({'name': e.title + " \n\tDepartment: " + e.department,'value': e.id})
+               });
+               //inquirer Employee
+               e.inqAddEmployee(currRoles,currMgrs,addData =>{
+                 e.addEmployee(addData, res =>{
+                   console.log(res);
+                 })
+                 mainMenu();
+               }) 
+            })
+          })
           break;
           case "View Departments":
           console.clear();
@@ -97,7 +114,7 @@ const connection = eval(require('./lib/connection'));
           case "Delete Role":
             console.clear();
             r.getAllRoles(data => {
-               console.log(data);
+               //console.log(data);
                 data.forEach(e => {
                   currRoles.push({'name': e.title + " Department: " + e.department,'value': e.id})
                 });
