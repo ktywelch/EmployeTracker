@@ -10,6 +10,8 @@ const c = require('./lib/company')
 const connection = eval(require('./lib/connection'));
 
  const mainMenu = () => {
+    let currDepts = [];
+    let currRoles = [];
     inquirer
       .prompt({
         name: "action",
@@ -34,10 +36,15 @@ const connection = eval(require('./lib/connection'));
             console.clear();
             // This is the inquirer function
             d.getAllDept( data => {
-              r.inqRole( data, roleName => {
+              data.forEach(e => {
+                currDepts.push({'name': e.name,'value': e.id})
+              });
+              r.inqAddRole( currDepts, roleName => {
                 //This is the add department with sql
+                  console.log(roleName);
                 r.addRole(roleName, (res) => {
-                 //console.log(res);
+
+                 console.log(res);
                 });
               mainMenu();
              })
@@ -69,7 +76,6 @@ const connection = eval(require('./lib/connection'));
           break;
           case "Delete Department":
             console.clear();
-            let currDepts=[];
             d.getAllDept( data => {
               data.forEach(e => {
                 currDepts.push({'name': e.name,'value': e.id})
@@ -85,7 +91,6 @@ const connection = eval(require('./lib/connection'));
               //mainMenu();
           break;
           case "Delete Role":
-            let currRoles = [];
             console.clear();
             r.getAllRoles(data => {
                console.log(data);
@@ -109,7 +114,7 @@ const connection = eval(require('./lib/connection'));
           default:
             connection.end();
             process.exit(0);
-            break;
+          
         }
       });
   };
