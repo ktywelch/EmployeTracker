@@ -1,8 +1,13 @@
-//const cTable = require('console.table');
+/*Naming convntions for the routines:
+inq - inquirer function
+add - sql add function
+del - sql delete function
+sel - sql select function
+upd - sql update function
+*/
 const inquirer = require('inquirer')
 const actions = require("./lib/actions");
 const mysql = require("mysql");
-const scripts = require('./lib/sqlscripts');
 const d = require('./lib/department')
 const e = require('./lib/employee')
 const r = require('./lib/role')
@@ -10,10 +15,10 @@ const c = require('./lib/company')
 const connection = eval(require('./lib/connection'));
 
  const mainMenu = () => {
-    let currDepts = [];
-    let currRoles = [];
-    let currMgrs = [];
-    let currEmps = [];
+    let currDepts = [], currRoles = [], currEmps = [];
+    //Manager is not always required adding null to choices
+    currMgrs = [{'name': 'No Manager Required','value': 0}];
+    let deptDef;
     inquirer
       .prompt({
         name: "action",
@@ -25,27 +30,21 @@ const connection = eval(require('./lib/connection'));
         switch (userResponse.action) {
           case "Add Department":
             console.clear();
-            // This is the inquirer function
-            d.inqDept( deptName => {
-              //This is the add department with sql
-              d.addDept(deptName, (res) => {
-                console.log(res);
+            deptDef = "";
+            d.inqDept( deptDef,deptName => {
+              d.addDept(deptName[0], (res) => {
               });
               mainMenu();
             })
             break;
           case "Add Role":
             console.clear();
-            // This is the inquirer function
             d.getAllDept( data => {
               data.forEach(e => {
                 currDepts.push({'name': e.name,'value': e.id})
               });
               r.inqAddRole( currDepts, roleName => {
-                //This is the add department with sql
-                 // console.log(roleName);
                 r.addRole(roleName, (res) => {
-                 console.log(res);
                 });
               mainMenu();
              })
@@ -55,7 +54,7 @@ const connection = eval(require('./lib/connection'));
           console.clear();
             e.getManagers( data1 => {
               data1.forEach(el => {
-                currMgrs.push({'name': el.manager + " ' " + e.title,'value': el.id})
+                currMgrs.push({'name': el.manager + "\n\t" + el.title + ", " + el.department,'value': el.id})
               });
              r.getAllRoles( data => {
                data.forEach(e => {
@@ -92,9 +91,25 @@ const connection = eval(require('./lib/connection'));
               mainMenu();
             });
           break;
-          case "Update Employee Roles":
+          case "Update Employee":
           break;
-          case "Update Employee Manager":
+
+          case "Update Department":
+            console.clear();
+            d.getAllDept( data => {
+              data.forEach(e => {
+                currDepts.push({'name': e.name,'value': e.id})
+              });
+               d.selDept(currDepts, vals => { 
+                d.inqDept( vals,deptName => {
+                  d.updDept(deptName[0],vals.value, res => {
+                    mainMenu();
+                  })
+                }) 
+              })
+            })
+          break;
+          case "Update Role":
           break;
           case "Delete Department":
             console.clear();
@@ -102,10 +117,8 @@ const connection = eval(require('./lib/connection'));
               data.forEach(e => {
                 currDepts.push({'name': e.name,'value': e.id})
               });
-               //console.log(data);
                d.selDept(currDepts, res => {
-                  d.delDept(res, (delD) => {
-                    console.log(delD);
+                  d.delDept(res.value, delD => {
                     mainMenu();
                   })
                 }) 
@@ -121,8 +134,10 @@ const connection = eval(require('./lib/connection'));
                 });
                 //console.log(currRoles);
                r.selRole(currRoles, res => {
-                  r.delRole(res, (delD) => {
-                    console.log(delD);
+                 console.log("aaaaaa",res);
+                  let sel = res.deptSel
+                  r.delRole(sel, delD => {
+                    console.log("bbbb",delD);
                     mainMenu();
                   })
                 }) 
@@ -135,7 +150,6 @@ const connection = eval(require('./lib/connection'));
               });
               e.selEmployee(currEmps, res => {
                 e.delEmployee(res, (delD) => {
-                  console.log(delD);
                   mainMenu();
                 })
               })
