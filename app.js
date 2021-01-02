@@ -92,8 +92,18 @@ const connection = eval(require('./lib/connection'));
             });
           break;
           case "Update Employee":
+            e.getAllEmployees( data => {
+              data.forEach(e => {
+                currEmps.push({'name': `${e.Employee}  - ${e.Role} in ${e.Department}` , 'value': e.id})
+              });
+              e.selEmployee(currEmps, res => {
+                
+                e.updEmployee(res, (delD) => {
+                  mainMenu();
+                })
+              })
+            })  
           break;
-
           case "Update Department":
             console.clear();
             d.getAllDept( data => {
