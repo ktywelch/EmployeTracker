@@ -13,7 +13,6 @@ const e = require('./lib/employee')
 const r = require('./lib/role')
 const c = require('./lib/company')
 const connection = eval(require('./lib/connection'));
-
  const mainMenu = () => {
     let currDepts = [], currRoles = [], currEmps = [];
     //Manager is not always required adding null to choices
@@ -39,16 +38,19 @@ const connection = eval(require('./lib/connection'));
             break;
           case "Add Role":
             console.clear();
-            d.getAllDept( data => {
-              data.forEach(e => {
-                currDepts.push({'name': e.name,'value': e.id})
-              });
-              r.inqAddRole( currDepts, roleName => {
+              d.getAllDept( data => {
+                 data.forEach(e => {
+                  currDepts.push({'name': e.name,'value': e.id})
+                });
+              })
+              r.inqAddRole('',currDepts, roleName => {
+                //because same inq used for add and update need to pop off last value
+                roleName.pop()
                 r.addRole(roleName, (res) => {
                 });
               mainMenu();
              })
-           })
+           
            break;
           case "Add Employee":
           console.clear();
@@ -93,6 +95,7 @@ const connection = eval(require('./lib/connection'));
             });
           break;
           case "Update Employee":
+            console.clear();
             e.getManagers( data1 => {
               data1.forEach(el => {
               currMgrs.push({'name': el.manager + "\n\t" + el.title + ", " + el.department,'value': el.id})
@@ -108,11 +111,10 @@ const connection = eval(require('./lib/connection'));
                 currEmps.push({'name': e.first_name + " " + e.last_name + " - " + e.Role + " in " + e.Department, 'value':  e.EmployeeID})
              });
               e.selEmployee(currEmps, defVal => {
-                // This extracts the data for the employee selected
+                // This extracts the data for the employee selected and passes to inq as defaults
                 let lp = data.filter((object) => {
                   return object["EmployeeID"] == defVal})
                   console.log(lp);
-
                 e.inqAddEmployee(lp,currRoles,currMgrs,addData =>{
                   e.updEmployee(addData, res =>{
                     console.log(res);
@@ -138,6 +140,29 @@ const connection = eval(require('./lib/connection'));
             })
           break;
           case "Update Role":
+            console.clear();
+            r.getAllRoles(data => {
+                data.forEach(e => {
+                  currRoles.push({'name': e.title + " Department: " + e.department,'value': e.id})
+                });
+              
+               r.selRole(currRoles, res => {
+                  //console.log("from update",res)
+                  let lp = data.filter((object) => {
+                    return object["id"] == res})
+                    console.log(lp);
+                    d.getAllDept( data => {
+                      data.forEach(e => {
+                        currDepts.push({'name': e.name,'value': e.id})
+                      });
+                    })
+                  r.inqAddRole(lp,currDepts, roleDet => {
+                     r.updRole(roleDet, delD => {
+                      mainMenu();
+                    })
+                }) 
+              })
+            })
           break;
           case "Delete Department":
             console.clear();
@@ -158,11 +183,11 @@ const connection = eval(require('./lib/connection'));
             r.getAllRoles(data => {
                //console.log(data);
                 data.forEach(e => {
-                  currRoles.push({'name': e.title + " Department: " + e.department,'value': e.EmployeeID})
+                  currRoles.push({'name': e.title + " Department: " + e.department,'value': e.id})
                 });
                r.selRole(currRoles, res => {
-                  let sel = res.deptSel
-                  r.delRole(sel, delD => {
+                 console.log(res)
+                  r.delRole(res.deptSel, delD => {
                     mainMenu();
                   })
                 }) 
