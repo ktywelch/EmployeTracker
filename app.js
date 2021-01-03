@@ -1,8 +1,9 @@
 /*Naming convntions for the routines:
 inq - inquirer function
+sel - inquirer function to select choice
 add - sql add function
 del - sql delete function
-sel - sql select function
+get - sql select function
 upd - sql update function
 */
 const inquirer = require('inquirer')
@@ -53,14 +54,11 @@ const getEmployees = () => {
 }
 
 const mainMenu = async () => {
-//Manager is not always required adding null to choices
-//currDepts = []; currRoles = []; currEmps = [];
+//This section make sure we have updated infromation
 currMgrs = await getManagers();
 currRoles = await getRoles();
 currEmps = await getEmployees();
 currDepts = await getDepartments();
-//currMgrs = [{'name': 'No Manager Required','value': 0}];
-let deptDef;
 inquirer
   .prompt({
     name: "action",
@@ -72,8 +70,7 @@ inquirer
     switch (userResponse.action) {
       case "Add Department":
         console.clear();
-        deptDef = "";
-        d.inqDept( deptDef,deptName => {
+        d.inqDept( '',deptName => {
           d.addDept(deptName[0], (res) => {
           });
           mainMenu();
@@ -81,7 +78,6 @@ inquirer
         break;
       case "Add Role":
         console.clear();
-        currDepts = getDepartments();
         r.inqAddRole('',currDepts, roleDet => {
             //because same inq used for add and update need to pop off last value or query will fail
             roleDet.pop()
@@ -91,8 +87,6 @@ inquirer
         break;
       case "Add Employee":
         console.clear();
-        currMgrs = getManagers();
-        currRoles = getRoles();
         //inquirer Employee - no default values since this is a new Employee
         e.inqAddEmployee("",currRoles,currMgrs,addData =>{
           addData.pop();
@@ -124,9 +118,6 @@ inquirer
         break;
       case "Update Employee":
         console.clear();
-        currMgrs = getManagers();
-        currRoles = getRoles();
-        currEmps = getEmployees();
         //need to call the get employees to populate the defaults
          e.getAllEmployees( data => {
           e.selEmployee(currEmps, defVal => {
@@ -143,11 +134,6 @@ inquirer
           break;
           case "Update Department":
             console.clear();
-            currDepts = getDepartments()
-            // d.getAllDept( data => {
-            //   data.forEach(e => {
-            //     currDepts.push({'name': e.name,'value': e.id})
-            //   });
             d.selDept(currDepts, vals => { 
                 d.inqDept(vals,deptName => {
                   d.updDept(deptName[0],vals.value, res => {
@@ -158,8 +144,6 @@ inquirer
           break;
           case "Update Role":
             console.clear();
-            currRoles = getRoles();
-            currDepts = getDepartments();
             r.getAllRoles(data => {
                r.selRole(currRoles, res => {
                   let lp = data.filter((object) => {
@@ -174,7 +158,6 @@ inquirer
           break;
           case "Delete Department":
             console.clear();
-            currDepts = getDepartments();
                d.selDept(currDepts, vals => {
                   d.delDept(vals.value, delD => {
                   })
@@ -184,7 +167,6 @@ inquirer
           break;
           case "Delete Role":
             console.clear();
-            currRoles = getRoles();
                r.selRole(currRoles, res => {
                  console.log(res)
                   r.delRole(res.deptSel, delD => {
@@ -194,7 +176,6 @@ inquirer
           break;
           case "Delete Employee":
             console.clear();
-            currEmps = getEmployees();
             console.log(currEmps);
               e.selEmployee(currEmps, res => {
                 e.delEmployee(res, (delD) => {
@@ -203,8 +184,12 @@ inquirer
               })            
           break;
           case "View Department Budget":
-          break;
-                                     
+            console.clear();
+            e.getDeptBudget(res => {
+              console.table(res)
+            });
+            mainMenu();
+          break;                                     
           default:
             connection.end();
             process.exit(0);
