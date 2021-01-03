@@ -14,6 +14,11 @@ const e = require('./lib/employee')
 const r = require('./lib/role')
 const c = require('./lib/company')
 const connection = eval(require('./lib/connection'));
+const logo = require('asciiart-logo');
+const config = require('./package.json');
+console.log(logo(config).render());
+
+
 let currDepts = [], currRoles = [], currEmps = [];
 
 const getDepartments = () => {
