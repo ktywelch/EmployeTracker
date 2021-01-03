@@ -60,8 +60,9 @@ const connection = eval(require('./lib/connection'));
                data.forEach(e => {
                currRoles.push({'name': e.title + " \n\tDepartment: " + e.department,'value': e.id})
                });
-               //inquirer Employee
-               e.inqAddEmployee(currRoles,currMgrs,addData =>{
+               //inquirer Employee - no default values since this is a new Employee
+               e.inqAddEmployee("",currRoles,currMgrs,addData =>{
+                addData.pop();
                  e.addEmployee(addData, res =>{
                    console.log(res);
                  })
@@ -92,17 +93,34 @@ const connection = eval(require('./lib/connection'));
             });
           break;
           case "Update Employee":
+            e.getManagers( data1 => {
+              data1.forEach(el => {
+              currMgrs.push({'name': el.manager + "\n\t" + el.title + ", " + el.department,'value': el.id})
+              });
+             })
+            r.getAllRoles( data => {
+              data.forEach(e => {
+              currRoles.push({'name': e.title + " \n\tDepartment: " + e.department,'value': e.id})
+              });
+            })
             e.getAllEmployees( data => {
               data.forEach(e => {
-                currEmps.push({'name': `${e.Employee}  - ${e.Role} in ${e.Department}` , 'value': e.id})
-              });
-              e.selEmployee(currEmps, res => {
-                
-                e.updEmployee(res, (delD) => {
-                  mainMenu();
-                })
-              })
-            })  
+                currEmps.push({'name': e.first_name + " " + e.last_name + " - " + e.Role + " in " + e.Department, 'value':  e.EmployeeID})
+             });
+              e.selEmployee(currEmps, defVal => {
+                // This extracts the data for the employee selected
+                let lp = data.filter((object) => {
+                  return object["EmployeeID"] == defVal})
+                  console.log(lp);
+
+                e.inqAddEmployee(lp,currRoles,currMgrs,addData =>{
+                  e.updEmployee(addData, res =>{
+                    console.log(res);
+                  })
+                mainMenu();
+              }) 
+            })
+          })       
           break;
           case "Update Department":
             console.clear();
@@ -111,7 +129,7 @@ const connection = eval(require('./lib/connection'));
                 currDepts.push({'name': e.name,'value': e.id})
               });
                d.selDept(currDepts, vals => { 
-                d.inqDept( vals,deptName => {
+                d.inqDept(vals,deptName => {
                   d.updDept(deptName[0],vals.value, res => {
                     mainMenu();
                   })
@@ -127,8 +145,8 @@ const connection = eval(require('./lib/connection'));
               data.forEach(e => {
                 currDepts.push({'name': e.name,'value': e.id})
               });
-               d.selDept(currDepts, res => {
-                  d.delDept(res.value, delD => {
+               d.selDept(currDepts, vals => {
+                  d.delDept(vals.value, delD => {
                     mainMenu();
                   })
                 }) 
@@ -140,14 +158,11 @@ const connection = eval(require('./lib/connection'));
             r.getAllRoles(data => {
                //console.log(data);
                 data.forEach(e => {
-                  currRoles.push({'name': e.title + " Department: " + e.department,'value': e.id})
+                  currRoles.push({'name': e.title + " Department: " + e.department,'value': e.EmployeeID})
                 });
-                //console.log(currRoles);
                r.selRole(currRoles, res => {
-                 console.log("aaaaaa",res);
                   let sel = res.deptSel
                   r.delRole(sel, delD => {
-                    console.log("bbbb",delD);
                     mainMenu();
                   })
                 }) 
@@ -156,7 +171,7 @@ const connection = eval(require('./lib/connection'));
           case "Delete Employee":
             e.getAllEmployees( data => {
               data.forEach(e => {
-                currEmps.push({'name': `${e.Employee}  - ${e.Role} in ${e.Department}` , 'value': e.id})
+                currEmps.push({'name':  e.first_name + " " + e.last_name + " - " + e.Role + " in " + e.Department, 'value': e.EmployeeID})
               });
               e.selEmployee(currEmps, res => {
                 e.delEmployee(res, (delD) => {
