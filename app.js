@@ -186,7 +186,7 @@ inquirer
           case "View Department Budget":
             console.clear();
             e.getDeptBudget(res => {
-              console.table(res)
+              console.table('\nBudget Report',res)
             });
             mainMenu();
           break;                                     
