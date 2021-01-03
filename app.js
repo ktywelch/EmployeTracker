@@ -12,12 +12,14 @@ const mysql = require("mysql");
 const d = require('./lib/department')
 const e = require('./lib/employee')
 const r = require('./lib/role')
-const c = require('./lib/company')
+
 const connection = eval(require('./lib/connection'));
+
+//print the logo - based on the contents from package.json
+
 const logo = require('asciiart-logo');
 const config = require('./package.json');
 console.log(logo(config).render());
-
 
 let currDepts = [], currRoles = [], currEmps = [];
 
@@ -59,7 +61,7 @@ const getEmployees = () => {
 }
 
 const mainMenu = async () => {
-//This section make sure we have updated infromation
+//This section make sure we have updated infromation each time mainMenu called
 currMgrs = await getManagers();
 currRoles = await getRoles();
 currEmps = await getEmployees();
@@ -190,15 +192,14 @@ inquirer
           break;
           case "View Department Budget":
             console.clear();
-            e.getDeptBudget(res => {
-              console.table('\nBudget Report',res)
+            e.getDeptBudget(resp => {
+              console.table(resp)
             });
             mainMenu();
           break;                                     
           default:
             connection.end();
             process.exit(0);
-          
         }
       });
   };
