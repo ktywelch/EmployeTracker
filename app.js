@@ -1,4 +1,4 @@
-/*Naming convntions for the routines:
+/*Naming conventions for the external functions routines:
 inq - inquirer function
 sel - inquirer function to select choice
 add - sql add function
@@ -57,6 +57,7 @@ const getEmployees = () => {
        })
      })
   return currEmps;
+
 }
 
 const mainMenu = async () => {
@@ -130,6 +131,7 @@ inquirer
         //need to call the get employees to populate the defaults
          e.getAllEmployees( data => {
           e.selEmployee(currEmps, defVal => {
+            console.log("here");
             // This filters data to return the employee selected and passes to inq as defaults
             let lp = data.filter((object) => {
             return object["EmployeeID"] == defVal})

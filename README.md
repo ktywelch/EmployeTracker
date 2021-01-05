@@ -11,7 +11,6 @@ The EmployeeTracker application allows a user to create, read, update and delete
 * [Installation](#Installation)
 * [Usage](#Usage)
 * [Technologies](#Technologies)
-* [Testing](#Testing)
 * [Contributions](#Contributions)
 * [License](#License)
 
@@ -46,3 +45,7 @@ Datamodel utilizes three tables with relationships established through foreign k
 The installation pocess is a download of git source, using npm install to install required modules based on the package.json file included in the same directory as the application.
 
 
+#Usage
+#Technologies
+#Contributions
+#License

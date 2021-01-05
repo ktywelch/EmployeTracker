@@ -1,5 +1,5 @@
 {
-  "name": "EmployeeTracker",
+  "name": "employee_tracker",
   "version": "1.0.0",
   "description": "Application that makes it easy for non-developers to view and interact with information stored in an employee database.",
   "main": "app.js",
