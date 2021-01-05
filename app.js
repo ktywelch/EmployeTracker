@@ -12,8 +12,7 @@ const mysql = require("mysql");
 const d = require('./lib/department')
 const e = require('./lib/employee')
 const r = require('./lib/role')
-
-const connection = eval(require('./lib/connection'));
+const connection = require('./lib/connection');
 
 //print the logo - based on the contents from package.json
 
@@ -45,7 +44,7 @@ return currMgrs;
 const getRoles = () => {
   r.getAllRoles( data => {
     data.forEach(e => {
-    currRoles.push({'name': e.title + " \n\tDepartment: " + e.department,'value': e.id})
+    currRoles.push({'name': e.title + "\n\tDepartment: " + e.department,'value': e.id})
     }); 
    })
    return currRoles;
@@ -85,7 +84,7 @@ inquirer
         break;
       case "Add Role":
         console.clear();
-        r.inqAddRole('',currDepts, roleDet => {
+        r.inqAddChgRole('',currDepts, roleDet => {
             //because same inq used for add and update need to pop off last value or query will fail
             roleDet.pop()
             r.addRole(roleDet, (res) => {});
@@ -95,7 +94,7 @@ inquirer
       case "Add Employee":
         console.clear();
         //inquirer Employee - no default values since this is a new Employee
-        e.inqAddEmployee("",currRoles,currMgrs,addData =>{
+        e.inqAddChgEmployee("",currRoles,currMgrs,addData =>{
           addData.pop();
             e.addEmployee(addData, res =>{ //console.log(res);
              })
@@ -132,7 +131,7 @@ inquirer
             let lp = data.filter((object) => {
             return object["EmployeeID"] == defVal})
             //console.log(lp);
-            e.inqAddEmployee(lp,currRoles,currMgrs,addData =>{
+            e.inqAddChgEmployee(lp,currRoles,currMgrs,addData =>{
               e.updEmployee(addData, res =>{})
                 mainMenu();
               }) 
@@ -141,9 +140,9 @@ inquirer
           break;
           case "Update Department":
             console.clear();
-            d.selDept(currDepts, vals => { 
+            d.selDept("upd",currDepts, vals => { 
                 d.inqDept(vals,deptName => {
-                  d.updDept(deptName[0],vals.value, res => {
+                  d.updDept(deptName[0],vals, res => {
                     mainMenu();
                   })
                 }) 
@@ -155,7 +154,7 @@ inquirer
                r.selRole(currRoles, res => {
                   let lp = data.filter((object) => {
                     return object["id"] == res})
-                  r.inqAddRole(lp,currDepts, roleDet => {
+                  r.inqAddChgRole(lp,currDepts, roleDet => {
                      r.updRole(roleDet, delD => {
                       mainMenu();
                     })
@@ -165,8 +164,8 @@ inquirer
           break;
           case "Delete Department":
             console.clear();
-               d.selDept(currDepts, vals => {
-                  d.delDept(vals.value, delD => {
+               d.selDept("del",currDepts, vals => {               
+                  d.delDept(vals, delD => {
                   })
                mainMenu();
             }) 
@@ -190,13 +189,18 @@ inquirer
                 })
               })            
           break;
-          case "View Department Budget":
+          case "View Selected Department Budgets":
             console.clear();
-            e.getDeptBudget(resp => {
-              console.table(resp)
-            });
-            mainMenu();
-          break;                                     
+            d.selDept("bud",currDepts, vals => { 
+                 console.log(vals)
+               //d.inqDept(vals,deptName => {
+                e.getAllDeptBudget(vals,resp => {
+              console.table(resp);
+                })
+               mainMenu();
+            })
+          //})
+          break;                                   
           default:
             connection.end();
             process.exit(0);
