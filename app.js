@@ -104,6 +104,7 @@ inquirer
       case "View Departments":
         console.clear();
         d.getAllDept( data => {
+            console.clear();
             console.table(data);
             mainMenu();
           });
@@ -111,6 +112,7 @@ inquirer
       case "View Roles":
         console.clear();
         r.getAllRoles( data => {
+           console.clear();
            console.table(data);
            mainMenu();
           });
@@ -118,6 +120,7 @@ inquirer
       case "View Employees by Manager":
         console.clear();
         e.getAllEmployees( data => {
+            console.clear();
             console.table(data);
             mainMenu();
         });
@@ -192,14 +195,12 @@ inquirer
           case "View Selected Department Budgets":
             console.clear();
             d.selDept("bud",currDepts, vals => { 
-                 console.log(vals)
-               //d.inqDept(vals,deptName => {
                 e.getAllDeptBudget(vals,resp => {
+              console.clear();    
               console.table(resp);
-                })
                mainMenu();
+                })
             })
-          //})
           break;                                   
           default:
             connection.end();
