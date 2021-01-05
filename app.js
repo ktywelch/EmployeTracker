@@ -180,8 +180,7 @@ inquirer
           case "Delete Role":
             console.clear();
                r.selRole(currRoles, res => {
-                 console.log(res)
-                  r.delRole(res.deptSel, delD => {
+                  r.delRole(res, delD => {
                   })
                   mainMenu();                  
                 }) 
