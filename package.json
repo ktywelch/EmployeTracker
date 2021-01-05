@@ -4,22 +4,20 @@
   "description": "Application that makes it easy for non-developers to view and interact with information stored in an employee database.",
   "main": "app.js",
   "directories": {
-    "lib": "lib",
-    "test": "test"
+    "lib": "lib"
   },
   "dependencies": {
     "ascii-art": "^2.5.0",
     "asciiart-logo": "^0.2.6",
     "console.table": "^0.10.0",
     "inquirer": "^7.3.3",
-    "jest": "^26.6.3",
     "mysql": "^2.18.1"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "jest  --verbose test/*"
+    "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kathleen Welch",
   "license": "ISC"
 }
