@@ -3,14 +3,6 @@ CREATE DATABASE company;
 
 USE company;
 
-CREATE TABLE employee (
-  id INT NOT NULL AUTO_INCREMENT,
-  first_name VARCHAR(30) NOT NULl,
-  last_name VARCHAR(30) NOT null,
-  role_id int,
-  manager_id int references employees(id) ON DELETE SET NULL,
-  PRIMARY KEY (id)
-);
 
 CREATE TABLE department(
   id INT NOT NULL AUTO_INCREMENT,
@@ -25,52 +17,26 @@ CREATE TABLE role (
   title VARCHAR(100) NOT NULL,
   salary int(12.2) NOT NULL,
   department_id INT,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),  FOREIGN KEY(department_id) REFERENCES department(id)
+);
+
+CREATE TABLE employee (
+  id INT NOT NULL AUTO_INCREMENT,
+  first_name VARCHAR(30) NOT NULl,
+  last_name VARCHAR(30) NOT null,
+  role_id int,
+  manager_id int references employees(id) ON DELETE SET NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY(role_id) REFERENCES role(id)
 );
 
 
-ALTER TABLE employee
-ADD FOREIGN KEY(role_id)
-REFERENCES role(id)
-ON DELETE SET NULL;
-
-
-ALTER TABLE role
-ADD FOREIGN KEY(department_id)
-REFERENCES department(id)
-ON DELETE SET NULL;
-
-
-
 INSERT INTO  role (title, salary)
-VALUES ("Manager", 55000);
+VALUES ("Manager", 55000), ("Engineer", 65000), ("Developer", 75000), ("CEO", 185000);
 
-INSERT INTO  role (title, salary)
-VALUES ("Engineer", 65000);
-
-INSERT INTO  role (title, salary)
-VALUES ("Developer", 75000);
-
-INSERT INTO  role (title, salary)
-VALUES ("CEO", 105000);
-
-INSERT INTO  department (name)
-VALUES ("Executive");
-
-INSERT INTO  department (name)
-VALUES ("IT");
-
-INSERT INTO  department (name)
-VALUES ("Human Resources");
+INSERT INTO  department (name) VALUES ("Executive & Administation"),("Information Technoloy"),("Human Resources");
 
 
-INSERT INTO  employee (first_name, last_name)
-values ("John","Smith");
-
-INSERT INTO  employee (first_name, last_name)
-values ("Joanna","Jones");
-
-INSERT INTO  employee (first_name, last_name)
-values ("Andrew","Adams");
+INSERT INTO  employee (first_name, last_name) values ("John","Smith"), ("Joanna","Jones"),("Andrew","Adams");
 
 
