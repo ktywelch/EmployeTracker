@@ -62,6 +62,7 @@ const getEmployees = () => {
 
 const mainMenu = async () => {
 //This section make sure we have updated infromation each time mainMenu called
+currDepts = [];currEmps = [];currMgrs = [];currRoles = [];
 currMgrs = await getManagers();
 currRoles = await getRoles();
 currEmps = await getEmployees();
@@ -71,6 +72,7 @@ inquirer
     name: "action",
     type: "list",
     message: "What would you like to do?",
+    pageSize: 15,
     choices: actions
   })
   .then((userResponse) => {
@@ -131,7 +133,6 @@ inquirer
         //need to call the get employees to populate the defaults
          e.getAllEmployees( data => {
           e.selEmployee(currEmps, defVal => {
-            console.log("here");
             // This filters data to return the employee selected and passes to inq as defaults
             let lp = data.filter((object) => {
             return object["EmployeeID"] == defVal})
