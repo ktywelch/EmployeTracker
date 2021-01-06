@@ -14,6 +14,8 @@ const e = require('./lib/employee')
 const r = require('./lib/role')
 const connection = require('./lib/connection');
 const CONCURRENCY = process.env.WEB_CONCURRENCY || 1;
+app.listen(process.env.PORT || 3000);
+
 
 //print the logo - based on the contents from package.json
 
