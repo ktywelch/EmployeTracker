@@ -13,6 +13,7 @@ const d = require('./lib/department')
 const e = require('./lib/employee')
 const r = require('./lib/role')
 const connection = require('./lib/connection');
+const CONCURRENCY = process.env.WEB_CONCURRENCY || 1;
 
 //print the logo - based on the contents from package.json
 
