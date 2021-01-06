@@ -134,13 +134,17 @@ inquirer
          e.getAllEmployees( data => {
           e.selEmployee(currEmps, defVal => {
             // This filters data to return the employee selected and passes to inq as defaults
-            let lp = data.filter((object) => {
-            return object["EmployeeID"] == defVal})
-            //console.log(lp);
-            e.inqAddChgEmployee(lp,currRoles,currMgrs,addData =>{
-              e.updEmployee(addData, res =>{})
-                mainMenu();
+            
+            if(defVal[0] != 'none'){
+             let lp = data.filter((object) => {
+             return object["EmployeeID"] == defVal})
+             //console.log(lp);
+              e.inqAddChgEmployee(lp,currRoles,currMgrs,addData =>{
+               e.updEmployee(addData, res =>{})
+               mainMenu();
               }) 
+           
+            } else {mainMenu()}
             })
           })       
           break;
@@ -158,13 +162,15 @@ inquirer
             console.clear();
             r.getAllRoles(data => {
                r.selRole(currRoles, res => {
+                if(res[0] != 'none'){
                   let lp = data.filter((object) => {
                     return object["id"] == res})
                   r.inqAddChgRole(lp,currDepts, roleDet => {
                      r.updRole(roleDet, delD => {
-                      mainMenu();
                     })
-                }) 
+                    mainMenu
+                })
+              } else{mainMenu();}
               })
             })
           break;
@@ -180,18 +186,21 @@ inquirer
           case "Delete Role":
             console.clear();
                r.selRole(currRoles, res => {
+                if(res[0] != 'none'){
                   r.delRole(res, delD => {
                   })
-                  mainMenu();                  
+                  }
+                mainMenu();                  
                 }) 
           break;
           case "Delete Employee":
             console.clear();
-            console.log(currEmps);
               e.selEmployee(currEmps, res => {
-                e.delEmployee(res, (delD) => {
-                  mainMenu();
+                if(res[0] != 'none'){
+                e.delEmployee(res, (delD) => {                 
                 })
+              }
+              mainMenu();
               })            
           break;
           case "View Selected Department Budgets":
