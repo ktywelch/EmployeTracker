@@ -18,8 +18,6 @@ const connection = require('./lib/connection');
 
 const logo = require('asciiart-logo');
 const config = require('./package.json');
-console.log(logo(config).render());
-
 let currDepts = [], currRoles = [], currEmps = [];
 
 const getDepartments = () => {
@@ -161,16 +159,17 @@ inquirer
           case "Update Role":
             console.clear();
             r.getAllRoles(data => {
-               r.selRole(currRoles, res => {
+               r.selRole('upd',currRoles, res => {
                 if(res[0] != 'none'){
                   let lp = data.filter((object) => {
                     return object["id"] == res})
                   r.inqAddChgRole(lp,currDepts, roleDet => {
                      r.updRole(roleDet, delD => {
+                       
                     })
-                    mainMenu
+                    mainMenu();
                 })
-              } else{mainMenu();}
+              } else{mainMenu()}
               })
             })
           break;
@@ -185,7 +184,7 @@ inquirer
           break;
           case "Delete Role":
             console.clear();
-               r.selRole(currRoles, res => {
+               r.selRole('del',currRoles, res => {
                 if(res[0] != 'none'){
                   r.delRole(res, delD => {
                   })
