@@ -50,24 +50,28 @@ The Application has a seeding.sql that can be used to create the database schema
 
 You may need to update the connection.js file in ./lib to reflect the port number and password for the MySQL system on your local host.
 
-#Usage
+## Usage
 To start the application run:
 
-    node app.js from the base directory
+    * node app.js  
+    or 
+    * npm start
 
-#Technologies
+From the base project directory once MySQL is installed, npm install and the schema has been created from the seeding.sql.
+
+## Technologies
 * MySQL Database Server
 * MySQL WorkBench
 * Node.js
 * NPM modules inquirer, mysql, console.table, asciiart-logo
 
-#Contributions - Study peers
+## Contributions - Study peers
 * Sam Ayler
 * Vincent Gines
 * Albert Cheng
 * Lucah Endicott
 
-#License
+## License
 ISC License (ISC)
 
 Copyright 2021 Kathleen WElch
