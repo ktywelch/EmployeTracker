@@ -18,6 +18,8 @@ const connection = require('./lib/connection');
 
 const logo = require('asciiart-logo');
 const config = require('./package.json');
+console.log(logo(config).render());
+
 let currDepts = [], currRoles = [], currEmps = [];
 
 const getDepartments = () => {
