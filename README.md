@@ -57,7 +57,11 @@ To start the application run:
     or 
     * npm start
 
+![](Assets/hw12.gif)
+
 From the base project directory once MySQL is installed, npm install and the schema has been created from the seeding.sql.
+
+To close the application choose exit from the menu.
 
 ## Technologies
 * MySQL Database Server
